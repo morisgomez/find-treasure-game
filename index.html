@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>treasure game</title>
+        <!--internal css below-->
+        <style>
+            body 
+            {
+                text-align: center;
+                color: white;
+                background-color: black;
+            }
+            
+            p 
+            {
+                display: inline;
+                font-size: 25px;
+                box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, 
+                  rgba(240, 46, 170, 0.3) 0px 10px, 
+                  rgba(240, 46, 170, 0.2) 0px 15px, 
+                  rgba(240, 46, 170, 0.1) 0px 20px, 
+                  rgba(240, 46, 170, 0.05) 0px 25px;
+            }
+
+            img 
+            {
+                box-shadow: blue 0px 0px 0px 2px inset, 
+                  rgb(255, 255, 255) 10px -10px 0px -3px, 
+                  rgb(31, 193, 27) 10px -10px, 
+                  rgb(255, 255, 255) 20px -20px 0px -3px, 
+                  rgb(255, 217, 19) 20px -20px, 
+                  rgb(255, 255, 255) 30px -30px 0px -3px, 
+                  rgb(255, 156, 85) 30px -30px, 
+                  rgb(255, 255, 255) 40px -40px 0px -3px, 
+                  rgb(255, 85, 85) 40px -40px;
+            }
+
+            .grow 
+            {
+                transition: all .2s ease-in-out; 
+            }
+
+            .grow:hover 
+            { 
+                transform: scale(1.1); 
+            }   
+</style>
+    </head>
+    <body>
+        <!--using <br> to manage space b/w elements. need to properly fix via css margins & padding.-->
+        <br>
+        <br>
+        <br>
+        <br>
+        <h1 id="heading" class="grow">find the burried treasure!</h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <img id="map" class="grow" width="400" height="400" src="http://nostarch.com/images/treasuremap.png">
+        <br>
+        <br>
+        <br>
+        <br>
+        <p class="grow"># of clicks:</p>
+        <p id="clicks" class="grow"> </p>
+
+        <br>
+        <br>
+        <p class="grow">distance from treaure in miles:</p>
+        <p id="value" class="grow"></p>
+
+        <br>
+        <br>
+        <p class="grow">you are:</p>
+        <p id="distance" class="grow"></p>
+
+        <!--internal js below-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!--script to access jquery.-->
+        <script> 
+        //setting up variables
+        const imgWidth = 400; //x = from 0 to 400px.
+        const imgHeight = 400; //y = from 0 to 400px.
+        let clicks = 0; //tracks clicks/guesses from user.
+
+        const getRandomNumber = size => //arrow function w/ 1 parameter.
+        {
+            return Math.floor(Math.random() * size); //random b/w 0 - 399. floor rounds down.
+        };
+
+        //creating target using object from random generator above:
+        let target = 
+        {
+            x: getRandomNumber(imgWidth), //gets random x axis of target.
+            y: getRandomNumber(imgHeight), //gets random y axis of target.
+        };
+
+       //using jQuery to track clicks, get distance, & display messages:
+        $("#map").click(function(Event)
+        { //function runs everytime image element is clicked.
+            clicks++;
+
+            //nested arrow function w/ pyth theroem to get distance from teasure vs click value:
+            const getDistance = (e, targetObj) => 
+            { //Event object passed as "e" and target as "targetObj."
+                let diffX = e.offsetX - targetObj.x; //click automatically generates object Event w/ key-values such as offsetX.
+                let diffY = e.offsetY - targetObj.y; //click automatically generates object Event w/ key-values such as offsetY.
+                let value = Math.sqrt((diffX * diffX) + (diffY * diffY)); //using pyth theroem.
+                $("#value").text(Math.floor(value)); //printed here bc of local var access.
+                return value; //make sure we return value.
+            }; //ends nested getDistance function.
+
+            //nested arrow function to display message to user:
+            const getDistanceHint = distance => 
+            {
+                if (distance < 10)
+                {
+                    alert("you found the treasure!!!!!!!"); 
+                }
+                if (distance < 20)
+                {
+                    return "boiling hot";
+                } 
+                else if (distance < 40)
+                {
+                    return "really hot";
+                } 
+                else if (distance < 60)
+                {
+                    return "hot";
+                } 
+                else if (distance < 80)
+                {
+                    return "warm";
+                }
+                else if (distance < 100)
+                {
+                    return "cold";
+                }
+                else if (distance < 120)
+                {
+                    return "very cold";
+                }
+                else if (distance < 150)
+                {
+                    return "very very cold";
+                }
+                else if (distance < 150)
+                {
+                    return "freezing cold";
+                }
+                else 
+                {
+                    return "you're not even trying";
+                }
+            }; //ends nested getDistanceHint function.
+
+            //calling functions to run game.
+            let distance = getDistance(Event, target); //objects passed as arguments.
+            let distanceHint = getDistanceHint(distance); //number passed as argument.
+            $("#distance").text(distanceHint); //display hint.
+            $("#clicks").text(clicks); //display click#.
+        }); //ends click event handler.
+        </script>
+    </body>
+</html>
