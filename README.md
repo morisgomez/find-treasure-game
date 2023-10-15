@@ -1,5 +1,5 @@
 # find-treasure-game
-Building Find the Treasure game using JavaScript DOM.
+Building Find the Treasure game using JavaScript DOM. JS and CSS is internally accessed via HTML file.
 <br>
 <br>
 Source/reference: Nick Morgan's "Javascript for Kids" 2015.
